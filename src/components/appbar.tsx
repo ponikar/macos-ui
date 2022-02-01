@@ -86,7 +86,7 @@ const Container = styled.div`
 `;
 
 const AppImage = styled.img`
-  transition: all 200ms ease-in;
+  position: relative;
 `;
 
 const AppHint = styled.div`
