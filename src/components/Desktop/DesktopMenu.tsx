@@ -62,7 +62,6 @@ export const DesktopMenu: FC = () => {
     setMount(true);
   }, []);
 
-  console.log("RERENDER");
   return mount ? (
     <MenuContainer
       ref={getButtons}
