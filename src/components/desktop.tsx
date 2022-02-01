@@ -7,6 +7,7 @@ import React, {
   useState,
 } from "react";
 import styled from "styled-components";
+import { DesktopMenu } from "./Desktop/DesktopMenu";
 
 export const Desktop: FC = ({ children }) => {
   const [showContext, setShowContext] = useState(false);
@@ -15,81 +16,39 @@ export const Desktop: FC = ({ children }) => {
     setShowContext(false);
     setShowContext(true);
   }, []);
-  return (
-    <Container
-      onBlur={(e) => setShowContext(false)}
-      onClick={(e) => setShowContext(false)}
-      onContextMenu={onRightClick}
-    >
-      {showContext && <ContextMenu />}
-      {children}
-    </Container>
-  );
-};
 
-const ContextMenu: FC = () => {
-  const [cords, setCords] = useState({ x: 0, y: 0 });
-  const [mount, setMount] = useState(false);
+  const hideContextMenu = useCallback(() => {
+    setShowContext(false);
+  }, [setShowContext]);
+
   useEffect(() => {
-    document.addEventListener("mouseup", (e) => {
-      setCords({ x: e.pageX, y: e.pageY - 15 });
-      setMount(true);
+    document.addEventListener("blur", hideContextMenu);
+    document.addEventListener("keyup", (e) => {
+      switch (e.key) {
+        case "Escape":
+          return hideContextMenu();
+        case "ContextMenu":
+          return setShowContext(true);
+        default:
+          return;
+      }
     });
 
     return () => {
-      document.removeEventListener("mouseup", () => {});
+      document.removeEventListener("blur", hideContextMenu);
+      document.removeEventListener("keyup", () => console.log("REMOVED"));
     };
   }, []);
 
   return (
-    mount && (
-      <MenuContainer style={{ "--x": `${cords.x}px`, "--y": `${cords.y}px` }}>
-        <MenuItem> New Folder </MenuItem>
-        <MenuDivider />
-        <MenuItem> Get Info </MenuItem>
-        <MenuItem> Changed Desktop Background... </MenuItem>
-        <MenuDivider />
-        <MenuItem> Use Stacks </MenuItem>
-        <MenuItem> Group Stack By </MenuItem>
-        <MenuItem> Show View Options </MenuItem>
-      </MenuContainer>
-    )
+    <Container onClick={hideContextMenu} onContextMenu={onRightClick}>
+      {showContext && <DesktopMenu />}
+      {children}
+    </Container>
   );
 };
 
 const Container = styled.main`
   flex: 1;
   position: relative;
-`;
-
-const MenuContainer = styled.div`
-  width: 250px;
-  height: auto;
-  background-color: rgba(0, 0, 0, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  position: absolute;
-  border-radius: 5px;
-  padding: 1px 0px;
-  transform: translate(var(--x), var(--y));
-  backdrop-filter: blur(20px);
-`;
-
-const MenuItem = styled.div`
-  padding: 3px 20px;
-
-  &:hover,
-  &:focus {
-    background-color: #0079fa;
-  }
-  margin: 2px;
-  border-radius: 5px;
-  font-size: 13px;
-  color: #fff;
-  cursor: pointer;
-`;
-
-const MenuDivider = styled.hr`
-  border-top: 1px solid rgba(255, 255, 255, 0);
-  width: 92%;
-  margin: 4px auto;
 `;
