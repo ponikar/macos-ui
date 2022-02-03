@@ -90,6 +90,7 @@ const MenuContainer = styled.div`
   transform: translate(var(--x), var(--y));
   backdrop-filter: blur(20px);
   z-index: 1;
+  user-select: none;
 `;
 
 const MenuItem = styled.button`

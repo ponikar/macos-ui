@@ -7,10 +7,12 @@ import React, {
   useState,
 } from "react";
 import styled from "styled-components";
+import { useActiveSelection } from "../hooks/useActiveSelection";
 import { DesktopMenu } from "./Desktop/DesktopMenu";
 
 export const Desktop: FC = ({ children }) => {
   const [showContext, setShowContext] = useState(false);
+  const { events, selectionStyle } = useActiveSelection();
   const onRightClick: MouseEventHandler<HTMLElement> = useCallback((e) => {
     e.preventDefault();
     setShowContext(false);
@@ -41,7 +43,14 @@ export const Desktop: FC = ({ children }) => {
   }, []);
 
   return (
-    <Container onClick={hideContextMenu} onContextMenu={onRightClick}>
+    <Container
+      onMouseDown={events.onMouseDown}
+      onMouseUp={events.onMouseUp}
+      onMouseMove={events.onMouseMove}
+      onClick={hideContextMenu}
+      onContextMenu={onRightClick}
+    >
+      <div style={selectionStyle} />
       {showContext && <DesktopMenu />}
       {children}
     </Container>
