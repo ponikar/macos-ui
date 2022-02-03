@@ -74,6 +74,7 @@ export const AppBar = () => {
           hoverOffset={hoverOffset}
           app={app}
           key={index}
+          containerWidth={containerRef.current?.clientWidth || 0}
         />
       ))}
     </AnimatedContainer>

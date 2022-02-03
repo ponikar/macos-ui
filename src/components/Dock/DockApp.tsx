@@ -1,6 +1,7 @@
-import React, { FC, useRef, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import styled from "styled-components";
+import { interpolate } from "../../utils/interpolate";
 
 const AppHint = styled.div`
   position: absolute;
@@ -43,12 +44,33 @@ interface DockProps {
   app: { src: string; title: string };
   index: number;
   hoverOffset: number;
+
+  containerWidth: number;
 }
 
-export const DockApp: FC<DockProps> = ({ app, index }) => {
+export const DockApp: FC<DockProps> = ({
+  app,
+  index,
+  hoverOffset,
+  containerWidth,
+}) => {
   const [width, setWidth] = useState<number>(0);
+  const [scale, setScale] = useState(1);
+  const current = (width * (index + 1)) / containerWidth;
+  const prev = (width * index) / containerWidth;
 
-  console.log((index + 1) * width);
+  useEffect(() => {
+    const calculateScale = interpolate({
+      interpolateValue: hoverOffset,
+      inputRange: [prev, current],
+    });
+    if (!Number.isNaN(calculateScale)) {
+      setScale(calculateScale);
+    }
+  }, [hoverOffset]);
+
+  console.log("SCALE", scale);
+
   return (
     <AnimatedAppContainer
       ref={(ref) => ref && setWidth(ref?.clientWidth)}
@@ -60,6 +82,7 @@ export const DockApp: FC<DockProps> = ({ app, index }) => {
       //   paddingLeft: "25px",
       //   paddingRight: "25px",
       // }}
+      animate={{ scale }}
       transition={{ duration: 0.025 }}
     >
       <AppHint> {app.title} </AppHint>
