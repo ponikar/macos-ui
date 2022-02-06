@@ -1,14 +1,25 @@
-import React from "react";
+import { motion } from "framer-motion";
+import React, { FC, RefObject } from "react";
 import styled from "styled-components";
+import { stopPropagation } from "../../utils/listeners";
 import { Sidebar } from "./Sidebar";
 import { WindowMain } from "./WindowMain";
 
-export const Window = () => {
+interface WindowProps {
+  ref?: RefObject<HTMLDivElement>;
+}
+export const Window: FC<WindowProps> = ({ ref }) => {
+  console.log(ref?.current);
   return (
-    <WindowContainer>
+    <AnimatedWindowContainer
+      dragConstraints={ref}
+      dragMomentum={false}
+      drag
+      {...stopPropagation}
+    >
       <Sidebar />
       <WindowMain />
-    </WindowContainer>
+    </AnimatedWindowContainer>
   );
 };
 
@@ -19,6 +30,7 @@ const WindowContainer = styled.section`
   display: flex;
   overflow: hidden;
 `;
+const AnimatedWindowContainer = motion(WindowContainer);
 
 export const WindowHeader = styled.header`
   height: 45px;

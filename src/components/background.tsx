@@ -1,9 +1,9 @@
-import React, { FC } from "react";
+import React, { FC, forwardRef, Ref } from "react";
 import styled from "styled-components";
 
-export const Background: FC = ({ children }) => {
-  return <BackgroundContainer>{children}</BackgroundContainer>;
-};
+export const Background: FC = forwardRef(({ children }, ref) => {
+  return <BackgroundContainer ref={ref}>{children}</BackgroundContainer>;
+});
 
 const BackgroundContainer = styled.main`
   width: 100%;
