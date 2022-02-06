@@ -3,6 +3,7 @@ import { Background } from "./components/background";
 import { Desktop } from "./components/desktop";
 import { Folder } from "./components/folder";
 import { Header } from "./components/header";
+import { Window } from "./components/Window";
 import "./index.css";
 
 const App = () => {
@@ -11,6 +12,7 @@ const App = () => {
       <Header />
       <Desktop>
         <Folder />
+        <Window />
       </Desktop>
       <AppBar />
     </Background>
