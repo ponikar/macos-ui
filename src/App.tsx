@@ -8,13 +8,13 @@ import { Window } from "./components/Window";
 import "./index.css";
 
 const App = () => {
-  const backgroundRef = useRef<HTMLDivElement>();
+  const backgroundRef = useRef<HTMLDivElement>(null);
   return (
-    <Background ref={backgroundRef.current}>
+    <Background ref={backgroundRef}>
       <Header />
       <Desktop>
         <Folder />
-        <Window ref={backgroundRef.current} />
+        <Window backgroundRef={backgroundRef} />
       </Desktop>
       <AppBar />
     </Background>

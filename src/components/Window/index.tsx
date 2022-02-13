@@ -1,19 +1,32 @@
-import { motion } from "framer-motion";
-import React, { FC, RefObject } from "react";
+import { motion, useDragControls } from "framer-motion";
+import React, { FC, MutableRefObject, useCallback } from "react";
 import styled from "styled-components";
 import { stopPropagation } from "../../utils/listeners";
 import { Sidebar } from "./Sidebar";
 import { WindowMain } from "./WindowMain";
 
 interface WindowProps {
-  ref?: RefObject<HTMLDivElement>;
+  backgroundRef: MutableRefObject<HTMLDivElement | undefined>;
 }
-export const Window: FC<WindowProps> = ({ ref }) => {
-  console.log(ref?.current);
+export const Window: FC<WindowProps> = ({ backgroundRef }) => {
+  const controls = useDragControls();
+
+  const onDragStart = useCallback((e, info) => {
+    if (!e?.target?.classList.contains("drag-handle")) {
+      // Stop the drag
+      (controls as any).componentControls.forEach((entry) => {
+        // be sure to pass along the event & info or it gets angry
+        entry.stop(e, info);
+      });
+    }
+  }, []);
   return (
     <AnimatedWindowContainer
-      dragConstraints={ref}
+      dragConstraints={backgroundRef}
       dragMomentum={false}
+      dragElastic={0}
+      dragControls={controls}
+      onDragStart={onDragStart}
       drag
       {...stopPropagation}
     >

@@ -1,7 +1,7 @@
 import React, { FC, forwardRef, Ref } from "react";
 import styled from "styled-components";
 
-export const Background: FC = forwardRef(({ children }, ref) => {
+export const Background = forwardRef<HTMLDivElement>(({ children }, ref) => {
   return <BackgroundContainer ref={ref}>{children}</BackgroundContainer>;
 });
 

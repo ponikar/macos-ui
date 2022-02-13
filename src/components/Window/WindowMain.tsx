@@ -1,13 +1,16 @@
+import { motion } from "framer-motion";
 import React from "react";
 import styled from "styled-components";
 import { Colors } from "../../Theme/color";
+import { WindowContainArea } from "./WindowContainArea";
 
 export const WindowMain = () => {
   return (
     <MainContainer>
-      <Header>
+      <Header className="drag-handle">
         <HeaderTitle>Red</HeaderTitle>
       </Header>
+      <WindowContainArea />
     </MainContainer>
   );
 };
