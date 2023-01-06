@@ -36,7 +36,7 @@ export const useActiveSelection = () => {
 };
 
 const defaultSelectionStyle: CSSProperties = {
-  backgroundColor: "red",
+  backgroundColor: "rgba(0, 0, 0, 0.1)",
   border: "1px solid rgba(0, 0, 0, 0.4)",
   position: "absolute",
   float: "right",

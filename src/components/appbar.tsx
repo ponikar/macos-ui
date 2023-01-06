@@ -1,6 +1,7 @@
-import React from "react";
+import React, { MouseEventHandler, useRef, useState } from "react";
 import styled from "styled-components";
-
+import { motion } from "framer-motion";
+import { DockApp } from "./Dock/DockApp";
 const BarData = [
   {
     src: "finder.svg",
@@ -53,18 +54,30 @@ const BarData = [
 ];
 
 export const AppBar = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [hoverOffset, setHoverOffset] = useState(0);
+  const onMouseMove: MouseEventHandler = (e) => {
+    if (containerRef.current) {
+      const containerWidth = containerRef.current.clientWidth;
+      const screenWidth = window.innerWidth;
+      const offset = e.pageX - (screenWidth - containerWidth) / 2;
+
+      setHoverOffset(((offset * 100) / containerWidth) * 0.01);
+    }
+  };
+
   return (
-    <Container>
+    <AnimatedContainer ref={containerRef} onMouseMove={onMouseMove}>
       {BarData.map((app, index) => (
-        <AppContaiener key={index}>
-          <AppHint> {app.title} </AppHint>
-          <AppImage
-            style={{ width: "45px", height: "45px", objectFit: "cover" }}
-            src={`/assets/imgs/bar/${app.src}`}
-          />
-        </AppContaiener>
+        <DockApp
+          index={index}
+          hoverOffset={hoverOffset}
+          app={app}
+          key={index}
+          containerWidth={containerRef.current?.clientWidth || 0}
+        />
       ))}
-    </Container>
+    </AnimatedContainer>
   );
 };
 
@@ -85,37 +98,4 @@ const Container = styled.div`
   gap: 6px;
 `;
 
-const AppImage = styled.img`
-  position: relative;
-`;
-
-const AppHint = styled.div`
-  position: absolute;
-  padding: 5px 10px;
-  border-radius: 5px;
-  background-color: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(50px);
-  color: #fff;
-  top: -40px;
-  font-size: 12px;
-  display: none;
-  width: max-content;
-  left: 50%;
-  transform: translateX(-50%);
-
-  &::before {
-    content: url("/assets/imgs/bar/arrow.svg");
-    position: absolute;
-    top: 22px;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-`;
-
-const AppContaiener = styled.button`
-  position: relative;
-  &:hover ${AppHint} {
-    display: block;
-  }
-`;
+const AnimatedContainer = motion(Container);
